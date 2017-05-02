@@ -15,12 +15,14 @@ socket.on('createEmail',(newmail)=>{//here custom event listener is created//
 })
 socket.on('createMessage',(newmessage)=>{
     console.log('Create message',newmessage);
+    io.emit('newMessage',{//to emit event to every user//
+     from:newmessage.from,
+     text:newmessage.text,
+     createdAt:new Date().getTime()
+    })
+
 })
-socket.emit('newMessage',{
-  from:'Alex',
-  text:'Hi meet u tomorrow',
-  createdAt:2530  
-});
+
 socket.emit('newEmail',{//here an object is emitted with the event
 from:'manu@mail.com',
 text:'hello',
