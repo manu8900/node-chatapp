@@ -4,6 +4,7 @@ const http = require('http');//required when we use socket.io & its builtin no n
 const socketIO = require('socket.io');//in terminal->npm  socket.io(Used for client server interaction ) //
 const port = process.env.PORT||3000;//used for deploying in heroku//
 const publicpath=path.join(__dirname,'../public');//path.join () includes the file from other folders//
+const {generatemessage}=require('./utils/message');
 var app = express();
 var server = http.createServer(app);//required when using socketio , functions similar to app.listen()//
 var io = socketIO(server);//creating web socket for emiting and listening to events//
@@ -13,25 +14,13 @@ console.log('new user connected');
 // socket.on('createEmail',(newmail)=>{//here custom event listener is created//
 //     console.log('Create email',newmail);
 // })
-socket.emit('newMessage',{
-    from:'admin',
-    text:'welcome to chat app',
-    createdAt:new Date().getTime()
-})
+socket.emit('newMessage',generatemessage('admin','welcome to chat app'));
 
-socket.broadcast.emit('newMessage',{
-    from:'admin',
-    text:'new user joined',
-    createdAt:new Date().getTime()
-})
+socket.broadcast.emit('newMessage',generatemessage('admin','new user joined'));
 
 socket.on('createMessage',(newmessage)=>{
     console.log('Create message',newmessage);
-    io.emit('newMessage',{//to emit event to every user//
-     from:newmessage.from,
-     text:newmessage.text,
-     createdAt:new Date().getTime()
-    });
+    io.emit('newMessage',generatemessage(newmessage.from,newmessage.text));//to emit event to every user//
     // socket.broadcast.emit('newMessage',{//using this method the user who created msg will not get it but everybody else connected does//
     //     from:newmessage.from,
     //     text:newmessage.text,
