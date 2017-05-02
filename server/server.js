@@ -10,27 +10,45 @@ var io = socketIO(server);//creating web socket for emiting and listening to eve
 app.use(express.static(publicpath));
 io.on('connection',(socket)=>{//enables events and provide socket connection to individual users & socket arguement returns value of socket variale in index.html file//
 console.log('new user connected');
-socket.on('createEmail',(newmail)=>{//here custom event listener is created//
-    console.log('Create email',newmail);
+// socket.on('createEmail',(newmail)=>{//here custom event listener is created//
+//     console.log('Create email',newmail);
+// })
+socket.emit('newMessage',{
+    from:'admin',
+    text:'welcome to chat app',
+    createdAt:new Date().getTime()
 })
+
+socket.broadcast.emit('newMessage',{
+    from:'admin',
+    text:'new user joined',
+    createdAt:new Date().getTime()
+})
+
 socket.on('createMessage',(newmessage)=>{
     console.log('Create message',newmessage);
     io.emit('newMessage',{//to emit event to every user//
      from:newmessage.from,
      text:newmessage.text,
      createdAt:new Date().getTime()
-    })
+    });
+    // socket.broadcast.emit('newMessage',{//using this method the user who created msg will not get it but everybody else connected does//
+    //     from:newmessage.from,
+    //     text:newmessage.text,
+    //     createdAt:new Date().getTime()
+    // })
+    
 
 })
 
-socket.emit('newEmail',{//here an object is emitted with the event
-from:'manu@mail.com',
-text:'hello',
-createat:123
-});//emiting the custom event newEmail//
-socket.on('disconect',()=>{
-    console.log('user was disconnected');
-})
+// socket.emit('newEmail',{//here an object is emitted with the event
+// from:'manu@mail.com',
+// text:'hello',
+// createat:123
+// });//emiting the custom event newEmail//
+// socket.on('disconect',()=>{
+//     console.log('user was disconnected');
+// })
 })
 server.listen(port,()=>{
     console.log(`Server running at ${port}`);//value of port is transferred to `${port}`///
