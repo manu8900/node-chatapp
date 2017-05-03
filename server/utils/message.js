@@ -1,4 +1,4 @@
-//creating a custo utiity//
+//creating a custom utiity//
 var generatemessage = (from,text)=>{
     return{
         from,
