@@ -36,20 +36,33 @@ socket.on('disconnect',function(){
 // });
 socket.on('newMessage',function(message){
     var formattedtime = moment(message.createdAt).format('h:mm a');
-    console.log('New message',message);
-    var li = jQuery('<li></li>');
-    li.text(`${message. from} ${formattedtime}: ${message.text}`);
+    var template = jQuery('#message-template').html();//html() returns the html element fom the index.hml file of the provided id in jquery//
+    var html= Mustache.render(template,{
+        text:message.text,
+        from:message.from,
+        createdAt:formattedtime
+    });//Mustache.render() renders the html element//
+    jQuery('#messages').append(html);
+    // console.log('New message',message);
+    // var li = jQuery('<li></li>');
+    // li.text(`${message. from} ${formattedtime}: ${message.text}`);
 
-    jQuery('#messages').append(li);
+    // jQuery('#messages').append(li);
 })
 socket.on('newlocationMessage',function(message){
     var locationtime = moment(message.createdAt).format('h:mm a');
-    var li=jQuery('<li></li>');
-    var a =jQuery('<a target="_blank">My current location</a>')//target=_blank so that link open in new tab of browser//
-    li.text(`${message.from} ${locationtime}:`)
-    a.attr('href',message.url);
-    li.append(a);
-    jQuery('#messages').append(li)
+    var template=jQuery('#location-message-template').html();
+    var html=Mustache.render(template,{
+        from:message.from,
+        url:message.url,
+        createdAt:locationtime
+    })
+    // var li=jQuery('<li></li>');
+    // var a =jQuery('<a target="_blank">My current location</a>')//target=_blank so that link open in new tab of browser//
+    // li.text(`${message.from} ${locationtime}:`)
+    // a.attr('href',message.url);
+    // li.append(a);
+    jQuery('#messages').append(html);//if used commented code it would append(li)//
 })
 var locationbutton = jQuery('#sendlocation');
 locationbutton.on('click',function(){
