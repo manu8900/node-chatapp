@@ -1,5 +1,20 @@
 var socket=io();//starts web socket connection to server//
 
+function scrollToBottom (){
+//selectors
+var messages=jQuery('#messages');
+var newMessage=messages.children('li:last-child')//children() method takes child elements for eg paragraph(p) also of the selected jquery id or class// 
+//heights
+var clientHeight=messages.prop('clientHeight');
+var scrollTop=messages.prop('scrollTop');
+var scrollHeight=messages.prop('scrollHeight');
+var newMessageHeight=newMessage.innerHeight();
+var lastmessageHeight=newMessage.prev().innerHeight();//prev() selects previous child element//
+if(clientHeight + scrollTop + newMessageHeight + lastmessageHeight >= scrollHeight){
+messages.scrollTop(scrollHeight);
+}
+}
+
     socket.on('connect',function(){//listens to the event//
      console.log('connected to server');
 
@@ -43,6 +58,7 @@ socket.on('newMessage',function(message){
         createdAt:formattedtime
     });//Mustache.render() renders the html element//
     jQuery('#messages').append(html);
+    scrollToBottom();
     // console.log('New message',message);
     // var li = jQuery('<li></li>');
     // li.text(`${message. from} ${formattedtime}: ${message.text}`);
@@ -63,6 +79,7 @@ socket.on('newlocationMessage',function(message){
     // a.attr('href',message.url);
     // li.append(a);
     jQuery('#messages').append(html);//if used commented code it would append(li)//
+    scrollToBottom();
 })
 var locationbutton = jQuery('#sendlocation');
 locationbutton.on('click',function(){
