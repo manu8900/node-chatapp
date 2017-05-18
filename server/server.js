@@ -1,7 +1,7 @@
 const path = require('path');//we have no need to install path we can directly use it to define paths in node js//
 const express = require('express');
 const http = require('http');//required when we use socket.io & its builtin no need to install//
-const socketIO = require('socket.io');//in terminal->npm  socket.io(Used for client server interaction ) //
+const socketIO = require('socket.io');//in terminal->npm i socket.io(Used for client server interaction ) //
 const port = process.env.PORT||3000;//used for deploying in heroku//
 const publicpath=path.join(__dirname,'../public');//path.join () includes the file from other folders//
 const {generatemessage,generatelocationmessage}=require('./utils/message');//using custom utility generatemessage// 
